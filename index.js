@@ -11,38 +11,17 @@ var SCOPES = ['https://www.googleapis.com/auth/gmail.readonly'];
 var credentials = null;
 var clientSecretPath;
 
-exports.setClientSecretsFile = function (path) {
-    clientSecretPath = path;
+exports.initCredentials = function (cred) {
+    credentials = cred;
 };
 exports.resetCredentials = function (callback) {
     credentials = null;
-    loadClientSecrets(callback);
-};
-
-// Load client secrets from a local file.
-var loadClientSecrets = function (callback) {
-    fs.readFile(clientSecretPath, function processClientSecrets(err, content) {
-        if (err) {
-            debug('Error loading client secret file: ' + err);
-            return callback(err);
-        } else {
-            credentials = JSON.parse(content);
-            return callback();
-        }
-    });
 };
 
 function checkCredentials(callback) {
     if (!credentials) {
-        loadClientSecrets(function (err) {
-            if (err) {
-                debug('Error loading credentials.');
-                return callback(err);
-            }
-            else {
-                return callback();
-            }
-        });
+        debug('No credentials.');
+        return callback(err);
     } else {
         return callback();
     }
